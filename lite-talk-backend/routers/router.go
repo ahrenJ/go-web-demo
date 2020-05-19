@@ -2,7 +2,6 @@ package routers
 
 import (
 	"github.com/gin-gonic/gin"
-	"lite-talk/service"
 	"net/http"
 )
 
@@ -15,17 +14,17 @@ func InitRouter() *gin.Engine {
 			"message": "I'm gin",
 		})
 	})
-	//用户模块api
+
 	user := r.Group("/user")
 	{
-		user.POST("/register", service.UserRegister)
-		user.POST("/login", service.UserLogin)
-		user.GET("/info/:id", service.UserInfo)
+		user.POST("/register", UserRegister)
+		user.POST("/login", UserLogin)
+		user.GET("/info/:id", UserInfo)
 	}
-	//主题模块api
+
 	topic := r.Group("/topic")
 	{
-		topic.GET("/all", service.Topics)
+		topic.GET("/all", Topics)
 	}
 	return r
 }

@@ -1,4 +1,4 @@
-package service
+package routers
 
 import (
 	"github.com/gin-gonic/gin"
@@ -20,12 +20,12 @@ func UserRegister(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, responseutil.ErrorArgs())
 		return
 	}
-	//查询用户名是否已被注册99
+
 	if models.QueryUserExisted(body.Nickname) {
 		c.JSON(http.StatusOK, gin.H{"msg": "用户名已被注册"})
 		return
 	}
-	//密码加密
+
 	encryptPwd, _ := bcrypt.GenerateFromPassword([]byte(body.Password), bcrypt.DefaultCost)
 	models.AddUser(body.Nickname, string(encryptPwd))
 	c.JSON(http.StatusOK, responseutil.SuccessWithMsg("注册成功"))

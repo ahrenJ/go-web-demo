@@ -18,7 +18,19 @@ type Topic struct {
 
 func QueryTopics(page int, pageNum int) (topics []Topic, pages int) {
 	topics, count := make([]Topic, 0, pageNum), 0
-	db.Debug().Offset((page - 1) * pageNum).Limit(pageNum).Find(&topics)
+	db.Offset((page - 1) * pageNum).Limit(pageNum).Find(&topics)
+	db.Table("topic").Count(&count)
+
+	pages = count / pageNum
+	if count%pageNum != 0 {
+		pages++
+	}
+	return topics, pages
+}
+
+func QueryTopicsByBlockId(blockId int, page int, pageNum int) (topics []Topic, pages int) {
+	topics, count := make([]Topic, 0, pageNum), 0
+	db.Where("block_id = ?", blockId).Offset((page - 1) * pageNum).Limit(pageNum).Find(&topics)
 	db.Table("topic").Count(&count)
 
 	pages = count / pageNum

@@ -27,8 +27,23 @@ func PostTopic(c *gin.Context) {
 }
 
 func Topics(c *gin.Context) {
-	p, _ := strconv.Atoi(c.DefaultQuery("p", "1"))
+	p, _ := strconv.Atoi(c.DefaultQuery("p", "10"))
 	topics, pages := models.QueryTopics(p, 10)
+
+	var data = make(map[string]interface{})
+	data["topics"] = topics
+	data["pages"] = pages
+	c.JSON(http.StatusOK, responseutil.SuccessWithData(data))
+}
+
+func TopicsOfBlock(c *gin.Context) {
+	blockId, err := strconv.Atoi(c.Param("blockId"))
+	page, _ := strconv.Atoi(c.DefaultQuery("p", "10"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responseutil.ErrorArgs())
+	}
+
+	topics, pages := models.QueryTopicsByBlockId(blockId, page, 10)
 
 	var data = make(map[string]interface{})
 	data["topics"] = topics
